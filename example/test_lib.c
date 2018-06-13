@@ -1,6 +1,8 @@
 
 
-//#define F_CPU 16000000 
+#ifndef F_CPU
+    #define F_CPU 16000000
+#endif 
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -8,6 +10,8 @@
 #include "..\One-Weird.h"
 
 int i;
+
+OneWeird ds;
 
 int main(void)
 {
@@ -43,16 +47,16 @@ int main(void)
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
-        oneWire_initilization();
-        oneWire_write_command(0xCC);
-        oneWire_write_command(0x44);        
+        ds.oneWire_initilization();
+        ds.oneWire_write_command(0xCC);
+        ds.oneWire_write_command(0x44);        
         _delay_ms(500);
         _delay_ms(500);
 
-        oneWire_initilization();
-        oneWire_write_command(0xCC);
+        ds.oneWire_initilization();
+        ds.oneWire_write_command(0xCC);
         PORTB |= (1 << LED_PORT);
-        oneWire_write_command(0xBE);
+        ds.oneWire_write_command(0xBE);
         PORTB &= ~(1 << LED_PORT);
 
         //oneWire_write_command(0xBE);
@@ -66,7 +70,7 @@ int main(void)
         PORTB |= (1 << LED_PORT);   
         for(i = 0; i < 16; i++ )
         {
-            oneWire_read_slot();
+            ds.oneWire_read_slot();
             _delay_us(1);
         }
         
