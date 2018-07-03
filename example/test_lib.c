@@ -11,11 +11,12 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void get_lasered_ROM_code(unsigned char *rom_code, unsigned char *family_code, OneWeird ds);
+void set_resolution(const unsigned char R1, const unsigned char R0);
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 OneWeird ds;
 
-unsigned char low_Temp, high_Temp;
+unsigned char low_Temp, high_Temp, th_register, tl_register, configuration_register;
 unsigned char rom_code[6], family_code;
 
 
@@ -27,31 +28,7 @@ int main(void)
     for(;;)
     {
         _delay_ms(100);        
-        //PORTB |= (1 << LED_PORT);
-        //   // toggle PD5
-        // _delay_ms(250);  // delay in ms, valor maximo = 260/F_CPU in MHz
-        // PORTB &= ~(1 << LED_PORT);
-        // _delay_ms(250);
-
-        // // test init
-        // if(oneWire_initilization() == true)
-        //  PORTB |= (1 << LED_PORT);
-        
-        // _delay_ms(500);        
-  //       PORTB |= (1 << LED_PORT);
-  //       // test write slot
-  //       oneWire_write_slot(0);
-  //       _delay_us(1);
-
-  //       oneWire_write_slot(1);
-  //       _delay_us(1);
-
-  //       oneWire_write_slot(1);
-  //       _delay_us(1);
-
-  //       PORTB &= ~(1 << LED_PORT);
-
-        
+         
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ds.oneWire_initilization();
         ds.oneWire_write_command(0xCC);
@@ -65,60 +42,24 @@ int main(void)
         ds.oneWire_write_command(0xBE);
         PORTB &= ~(1 << LED_PORT);
 
-        //oneWire_write_command(0xBE);
-        //oneWire_write_slot(1);
-        //oneWire_write_slot(0);
-        //_delay_us(1);
-        //oneWire_write_slot(0);
-
         
         _delay_us(10);
         PORTB |= (1 << LED_PORT);   
         
         low_Temp = ds.oneWire_read_byte();
         high_Temp = ds.oneWire_read_byte();
-
+        th_register = ds.oneWire_read_byte();
+        tl_register = ds.oneWire_read_byte();
+        configuration_register = ds.oneWire_read_byte();
         PORTB &= ~(1 << LED_PORT);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        // _delay_us(1);
-        // oneWire_read_slot();
-        // _delay_us(1);
-        // oneWire_read_slot();
-        // _delay_us(1);
-        // oneWire_read_slot();
-        // _delay_us(1);
-        // oneWire_read_slot();
-        // _delay_us(1);
-        // oneWire_read_slot();
-        // _delay_us(1);
-
-  //    oneWire_initilization();
-        // oneWire_write_command(0x33);
-         
-        // PORTB |= (1 << LED_PORT);    
-  //    for(i = 0; i < 16; i++ )
-  //    {
-  //        oneWire_read_slot();
-  //        _delay_us(1);
-  //    } 
-  //    PORTB &= ~(1 << LED_PORT);
-  //    _delay_ms(1);   
-
-      // ds.oneWire_initilization();
-      // ds.oneWire_write_command(0x33);  
-             
-      // crc_read = ds.oneWire_read_byte();   
-      // rom_code1 = ds.oneWire_read_byte();
-      // rom_code2 = ds.oneWire_read_byte();
-      // rom_code3 = ds.oneWire_read_byte();
-      // rom_code4 = ds.oneWire_read_byte();
-      // rom_code5 = ds.oneWire_read_byte();
-      // family_code = ds.oneWire_read_byte();
-
       get_lasered_ROM_code(&rom_code[0], &family_code,ds);
+
+
+      set_resolution(1,0);
 
     }
 
@@ -138,4 +79,20 @@ void get_lasered_ROM_code(unsigned char *rom_code, unsigned char *family_code, O
   *(rom_code + 4) = ds.oneWire_read_byte();
   *(rom_code + 5) = ds.oneWire_read_byte();
   ds.oneWire_read_byte(); // 1 byte CRC
+}
+
+
+
+void set_resolution(const unsigned char R1, const unsigned char R0)
+{
+  if( ( (R0 != 1 && R0 != 0)|| (R1 != 1 && R1 != 0) ) ){ return; }  // Only possible values for R0/1 is 0 or 1
+
+  ds.oneWire_initilization();
+  ds.oneWire_write_command(0xCC);
+  ds.oneWire_write_command(0x4E); // Write Scratchpad command
+
+
+  ds.oneWire_write_command(0xAA);
+  ds.oneWire_write_command(0xBB);
+  ds.oneWire_write_command((R1 << 6) | (R0 << 5) | 0); // 11 = 5, 10 = 4, 01 = 2, 00 = 0
 }
