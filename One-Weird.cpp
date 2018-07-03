@@ -116,10 +116,16 @@
 
 	}
 
-	// // writes 1 byte command ie 0x33
-	// void OneWeird::oneWire_read_byte(void)
-	// {
+	// Reads 1 byte
+	unsigned char OneWeird::oneWire_read_byte(void)
+	{
+		int i = 0;
+		for(i = 0; i < 8; i++ )
+        {
+            oneWire_read_slot();
+            _delay_us(1);
+        }
 
-
-	// }
+        return 0xaa;
+	}
 

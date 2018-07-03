@@ -9,8 +9,6 @@
 
 #include "..\One-Weird.h"
 
-int i;
-
 OneWeird ds;
 
 int main(void)
@@ -68,11 +66,11 @@ int main(void)
         
         _delay_us(10);
         PORTB |= (1 << LED_PORT);   
-        for(i = 0; i < 16; i++ )
-        {
-            ds.oneWire_read_slot();
-            _delay_us(1);
-        }
+        
+        ds.oneWire_read_byte();
+        ds.oneWire_read_byte();
+        ds.oneWire_read_byte();
+        ds.oneWire_read_byte();
         
         PORTB &= ~(1 << LED_PORT);
         ////////////////////////////////////////////////////////////////////////////////////////////////
