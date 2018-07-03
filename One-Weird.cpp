@@ -73,7 +73,10 @@
 	unsigned char OneWeird::oneWire_read_slot(void)
 	{
 		unsigned char bit;
+
+		#ifdef ONE_WEIRD_DEBUG
 		PORTB &= ~(1 << SAMPLE_PORT);  // high sample port to indicate start of sampling
+		#endif
 
 		PORTB |= (1 << SENSOR_PORT);  // high signal (x1) // pull-up enable or output high
 		DDRB |= (1 << SENSOR_PORT);   // Set port as output (11) 
@@ -85,11 +88,13 @@
 		DDRB &= ~(1 << SENSOR_PORT);   // Set port as input tri-state (00)
 		_delay_us(8); 	// sample before 15 µs after the read slot starts
 		
-		PORTB |= (1 << SAMPLE_PORT);
+		#ifdef ONE_WEIRD_DEBUG
+			PORTB |= (1 << SAMPLE_PORT);
+		#endif
 		bit = (( (PINB & (1 << SENSOR_PORT)) > 0) ? (1) : (0));
-
+		#ifdef ONE_WEIRD_DEBUG
 		PORTB &= ~(1 << SAMPLE_PORT); // low sample port to indicate start of sampling
-
+		#endif
 		_delay_us(60);
 
 		//PORTB |= (1 << SENSOR_PORT);  // high signal (01) // pull-up enable

@@ -8,7 +8,10 @@
 	#define SENSOR_PORT PB2
 	#define LED_PORT PB1
 	#define SAMPLE_PORT PB3
-	
+	#define ONE_WEIRD_DEBUG 1   //comment entire line if you are not debugging
+
+
+
 	class OneWeird
 	{
 	public:		
@@ -19,9 +22,5 @@
 	};
 	
 
-
-
-
-
-
+	
 #endif
