@@ -120,12 +120,13 @@
 	unsigned char OneWeird::oneWire_read_byte(void)
 	{
 		int i = 0;
+		unsigned char read_byte = 0;
 		for(i = 0; i < 8; i++ )
         {
-            oneWire_read_slot();
+            read_byte |= ( oneWire_read_slot() << i);
             _delay_us(1);
         }
 
-        return 0xaa;
+        return read_byte;
 	}
 

@@ -11,6 +11,9 @@
 
 OneWeird ds;
 
+unsigned char var1, var2;
+unsigned char rom_code1, rom_code2, rom_code3, rom_code4, rom_code5, crc_read, family_code;  
+
 int main(void)
 {
     DDRB |= (1 << SENSOR_PORT) | (1 << LED_PORT) | (1 << SAMPLE_PORT); 
@@ -67,11 +70,9 @@ int main(void)
         _delay_us(10);
         PORTB |= (1 << LED_PORT);   
         
-        ds.oneWire_read_byte();
-        ds.oneWire_read_byte();
-        ds.oneWire_read_byte();
-        ds.oneWire_read_byte();
-        
+        var1 = ds.oneWire_read_byte();
+        var2 = ds.oneWire_read_byte();
+
         PORTB &= ~(1 << LED_PORT);
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,8 +100,17 @@ int main(void)
   //    } 
   //    PORTB &= ~(1 << LED_PORT);
   //    _delay_ms(1);   
-                
 
+      ds.oneWire_initilization();
+      ds.oneWire_write_command(0x33);  
+             
+      crc_read = ds.oneWire_read_byte();   
+      rom_code1 = ds.oneWire_read_byte();
+      rom_code2 = ds.oneWire_read_byte();
+      rom_code3 = ds.oneWire_read_byte();
+      rom_code4 = ds.oneWire_read_byte();
+      rom_code5 = ds.oneWire_read_byte();
+      family_code = ds.oneWire_read_byte();
 
 
     }
