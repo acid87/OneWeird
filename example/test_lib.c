@@ -11,7 +11,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void get_lasered_ROM_code(unsigned char *rom_code, unsigned char *family_code, OneWeird ds);
-void set_resolution(const unsigned char R1, const unsigned char R0);
+void set_resolution(const unsigned char R1, const unsigned char R0, OneWeird ds);
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 OneWeird ds;
@@ -59,7 +59,7 @@ int main(void)
       get_lasered_ROM_code(&rom_code[0], &family_code,ds);
 
 
-      set_resolution(1,1);
+      set_resolution(1, 1, ds);
 
     }
 
@@ -83,14 +83,13 @@ void get_lasered_ROM_code(unsigned char *rom_code, unsigned char *family_code, O
 
 
 
-void set_resolution(const unsigned char R1, const unsigned char R0)
+void set_resolution(const unsigned char R1, const unsigned char R0, OneWeird ds)
 {
   if( ( (R0 != 1 && R0 != 0) || (R1 != 1 && R1 != 0) ) ){ return; }  // Only possible values for R0/1 is 0 or 1
 
   ds.oneWire_initilization();
   ds.oneWire_write_byte(0xCC);
   ds.oneWire_write_byte(0x4E); // Write Scratchpad command
-
 
   ds.oneWire_write_byte(0xFF); // Writes on Th
   ds.oneWire_write_byte(0xFF); // Writes on Tl
