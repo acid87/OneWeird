@@ -104,7 +104,7 @@
 	}
 
 	// writes 1 byte command ie 0x33
-	void OneWeird::oneWire_write_command(const unsigned char command)
+	void OneWeird::oneWire_write_byte(const unsigned char command)
 	{
 		int mask = 0;	
 

@@ -18,7 +18,7 @@
 		unsigned char oneWire_initilization(void);
 		void oneWire_write_slot(const unsigned char bit);
 		unsigned char oneWire_read_slot(void);
-		void oneWire_write_command(const unsigned char command);
+		void oneWire_write_byte(const unsigned char command);
 		unsigned char oneWire_read_byte(void);
 	};
 	

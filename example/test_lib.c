@@ -31,15 +31,15 @@ int main(void)
          
         ////////////////////////////////////////////////////////////////////////////////////////////////
         ds.oneWire_initilization();
-        ds.oneWire_write_command(0xCC);
-        ds.oneWire_write_command(0x44);        
+        ds.oneWire_write_byte(0xCC);
+        ds.oneWire_write_byte(0x44);        
         _delay_ms(500);
         _delay_ms(500);
 
         ds.oneWire_initilization();
-        ds.oneWire_write_command(0xCC);
+        ds.oneWire_write_byte(0xCC);
         PORTB |= (1 << LED_PORT);
-        ds.oneWire_write_command(0xBE);
+        ds.oneWire_write_byte(0xBE);
         PORTB &= ~(1 << LED_PORT);
 
         
@@ -59,7 +59,7 @@ int main(void)
       get_lasered_ROM_code(&rom_code[0], &family_code,ds);
 
 
-      set_resolution(1,0);
+      set_resolution(1,1);
 
     }
 
@@ -69,7 +69,7 @@ int main(void)
 void get_lasered_ROM_code(unsigned char *rom_code, unsigned char *family_code, OneWeird ds)
 {
   ds.oneWire_initilization();
-  ds.oneWire_write_command(0x33); 
+  ds.oneWire_write_byte(0x33); 
 
   *family_code = ds.oneWire_read_byte(); 
   *(rom_code + 0) = ds.oneWire_read_byte();
@@ -85,14 +85,14 @@ void get_lasered_ROM_code(unsigned char *rom_code, unsigned char *family_code, O
 
 void set_resolution(const unsigned char R1, const unsigned char R0)
 {
-  if( ( (R0 != 1 && R0 != 0)|| (R1 != 1 && R1 != 0) ) ){ return; }  // Only possible values for R0/1 is 0 or 1
+  if( ( (R0 != 1 && R0 != 0) || (R1 != 1 && R1 != 0) ) ){ return; }  // Only possible values for R0/1 is 0 or 1
 
   ds.oneWire_initilization();
-  ds.oneWire_write_command(0xCC);
-  ds.oneWire_write_command(0x4E); // Write Scratchpad command
+  ds.oneWire_write_byte(0xCC);
+  ds.oneWire_write_byte(0x4E); // Write Scratchpad command
 
 
-  ds.oneWire_write_command(0xAA);
-  ds.oneWire_write_command(0xBB);
-  ds.oneWire_write_command((R1 << 6) | (R0 << 5) | 0); // 11 = 5, 10 = 4, 01 = 2, 00 = 0
+  ds.oneWire_write_byte(0xFF); // Writes on Th
+  ds.oneWire_write_byte(0xFF); // Writes on Tl
+  ds.oneWire_write_byte((R1 << 6) | (R0 << 5) | 0); // 11 = 5, 10 = 4, 01 = 2, 00 = 0
 }
